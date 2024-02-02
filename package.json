@@ -4,7 +4,6 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev:pages": "wrangler pages dev ./dist --compatibility-date=2024-02-02",
     "dev": "wrangler pages dev --port 3001 --proxy 3000 --compatibility-date=2024-01-19 -- vite",
     "build": "vite build",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
