@@ -2,7 +2,7 @@ import { fruits } from "./data";
 
 export function onRequest(context) {
   const url = new URL(context.request.url);
-  const q = url.searchParams.get("q");
+  const search = url.searchParams.get("search");
 
   return new Response(JSON.stringify(fruits));
 }
