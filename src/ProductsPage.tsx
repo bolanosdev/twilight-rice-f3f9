@@ -1,4 +1,5 @@
 import { Component } from "react";
+import { fetchData } from "./fetch_data";
 import styled from "@emotion/styled";
 
 const PageContainer = styled.div({
@@ -25,49 +26,75 @@ const TopbarContainer = styled.div({
   marginBottom: "2rem",
 });
 
-export default class ProductsPage extends Component {
-  render() {
-    return (
-      <PageContainer>
-        <Sidebar>
+const CardGrid = styled.div({
+  display: "grid",
+  gridTemplateColumns: "repeat(3, 1fr)",
+  gap: "10px",
+  gridAutoRows: "minmax(100%, auto)",
+});
+
+const CardContainer = styled.div({
+  border: "1px solid",
+  borderRadius: "5px",
+  padding: "10px",
+});
+
+const ProductsPage = () => {
+  const data = fetchData();
+
+  return (
+    <PageContainer>
+      <Sidebar>
+        <div>
+          <h3>Categories</h3>
           <div>
-            <h3>Categories</h3>
-            <div>
-              <input name="domestic" type="checkbox" />
-              <label>Domestic</label>
-            </div>
-            <div>
-              <input name="exotic" type="checkbox" />
-              <label>Exotic</label>
-            </div>
-            <div>
-              <input name="sweet" type="checkbox" />
-              <label>Sweet</label>
-            </div>
-            <div>
-              <input name="tangy" type="checkbox" />
-              <label>Tangy</label>
-            </div>
+            <input name="domestic" type="checkbox" />
+            <label>Domestic</label>
           </div>
-        </Sidebar>
-        <Content>
-          <TopbarContainer>
-            <div>
-              <label>Search</label>
-              <input name="search" type="search" />
-            </div>
-            <div>
-              <label>Sort By</label>
-              <select name="choice">
-                <option value="price-lo-hi">Price: Low to High</option>
-                <option value="price-hi-lo">Price: High to Low</option>
-                <option value="avg-rating">Average Rating</option>
-              </select>
-            </div>
-          </TopbarContainer>
-          <div>Product listings go here</div>
-        </Content>
-      </PageContainer>
-    );
-  }
-}
+          <div>
+            <input name="exotic" type="checkbox" />
+            <label>Exotic</label>
+          </div>
+          <div>
+            <input name="sweet" type="checkbox" />
+            <label>Sweet</label>
+          </div>
+          <div>
+            <input name="tangy" type="checkbox" />
+            <label>Tangy</label>
+          </div>
+        </div>
+      </Sidebar>
+      <Content>
+        <TopbarContainer>
+          <div>
+            <label>Search</label>
+            <input name="search" type="search" />
+          </div>
+          <div>
+            <label>Sort By</label>
+            <select name="choice">
+              <option value="price-lo-hi">Price: Low to High</option>
+              <option value="price-hi-lo">Price: High to Low</option>
+              <option value="avg-rating">Average Rating</option>
+            </select>
+          </div>
+        </TopbarContainer>
+        <CardGrid>
+          {data.map((it, index) => (
+            <CardContainer key={index}>
+              <i>{it.emoji}</i>
+              <p>name: {it.name}</p>
+              <p>stars: {it.stars}</p>
+              <p>price: {it.price}</p>
+              <p>categories: {it.categories.join(",")}</p>
+              <p>tags: {it.tags?.join(",")}</p>
+            </CardContainer>
+          ))}
+        </CardGrid>
+      </Content>
+    </PageContainer>
+  );
+};
+
+export default ProductsPage;
