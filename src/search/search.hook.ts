@@ -4,6 +4,7 @@ type Category = {
   name: string;
   checked: boolean;
 };
+
 type Fruit = {
   icon: string;
   name: string;
@@ -25,13 +26,23 @@ export const useSearch = ({ data }: SearchProps) => {
   const search = (searchTerm, categories) => {
     const selectedCategories = categories
       .filter((it) => it.checked)
-      .map((it) => it.name);
+      .map((it) => it.name.toLowerCase());
 
-    console.log("f: selectedCategories", selectedCategories);
-    // miss to do the union between fruit.cats and selected cats
     setFilteredItems(
       data.filter((it) => {
-        return it.name.toLowerCase().includes(searchTerm.toLowerCase());
+        const matchSearchTerm = it.name
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase());
+
+        let matchCategories = true;
+        for (const category of selectedCategories) {
+          const includesCategory = it.categories.includes(category);
+          if (!includesCategory) {
+            matchCategories = false;
+            break;
+          }
+        }
+        return matchSearchTerm && matchCategories;
       }),
     );
   };

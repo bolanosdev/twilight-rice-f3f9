@@ -1,4 +1,4 @@
-import { Component, useEffect } from "react";
+import { useEffect } from "react";
 import { useState } from "react";
 import { fetchData } from "./fetch_data";
 import { useSearch } from "./search/search.hook.ts";
@@ -44,16 +44,17 @@ const CardContainer = styled.div({
 
 const ProductsPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
+  const [categories, setCategories] = useState([]);
   const { filteredItems, search } = useSearch({
     data: fetchData(),
   });
 
   useEffect(() => {
-    search(searchTerm, []);
-  }, [searchTerm]);
+    search(searchTerm, categories);
+  }, [searchTerm, categories]);
 
   const onCategoriesChange = (categories) => {
-    search(searchTerm, categories);
+    setCategories(categories);
   };
 
   return (
