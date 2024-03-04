@@ -1,5 +1,8 @@
-import { Component } from "react";
+import { Component, useEffect } from "react";
+import { useState } from "react";
 import { fetchData } from "./fetch_data";
+import { useSearch } from "./search/search.hook.ts";
+import { Categories } from "./Categories.tsx";
 import styled from "@emotion/styled";
 
 const PageContainer = styled.div({
@@ -40,36 +43,36 @@ const CardContainer = styled.div({
 });
 
 const ProductsPage = () => {
-  const data = fetchData();
+  const [searchTerm, setSearchTerm] = useState("");
+  const { filteredItems, search } = useSearch({
+    data: fetchData(),
+  });
+
+  useEffect(() => {
+    search(searchTerm, []);
+  }, [searchTerm]);
+
+  const onCategoriesChange = (categories) => {
+    search(searchTerm, categories);
+  };
 
   return (
     <PageContainer>
       <Sidebar>
-        <div>
-          <h3>Categories</h3>
-          <div>
-            <input name="domestic" type="checkbox" />
-            <label>Domestic</label>
-          </div>
-          <div>
-            <input name="exotic" type="checkbox" />
-            <label>Exotic</label>
-          </div>
-          <div>
-            <input name="sweet" type="checkbox" />
-            <label>Sweet</label>
-          </div>
-          <div>
-            <input name="tangy" type="checkbox" />
-            <label>Tangy</label>
-          </div>
-        </div>
+        <Categories onChange={onCategoriesChange} />
       </Sidebar>
       <Content>
         <TopbarContainer>
           <div>
             <label>Search</label>
-            <input name="search" type="search" />
+            <input
+              name="search"
+              type="search"
+              value={searchTerm}
+              onChange={(event) => {
+                setSearchTerm(event.target.value);
+              }}
+            />
           </div>
           <div>
             <label>Sort By</label>
@@ -81,7 +84,7 @@ const ProductsPage = () => {
           </div>
         </TopbarContainer>
         <CardGrid>
-          {data.map((it, index) => (
+          {filteredItems.map((it, index) => (
             <CardContainer key={index}>
               <i>{it.emoji}</i>
               <p>name: {it.name}</p>
